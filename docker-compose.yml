@@ -1,0 +1,34 @@
+version: "3.3"
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+  web:
+    image: yasirmehmood/ruby-app:1.1
+   # build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -e production --binding '0.0.0.0'"
+
+    #command: bash -c "bundle exec sidekiq -C config/sidekiq.yml"
+    command: bash -c "bundle exec rake db:create && bundle exec rake db:seed"
+    command: bash -c "bundle exec sidekiq -C config/sidekiq.yml" 
+    command: bash -c "cd /web && rails server --binding '0.0.0.0'"
+  
+    environment:
+      DATABASE_PASS: password
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    links:
+      - db
+      - redis_master
+    depends_on:
+      - db
+      - redis_master
+  redis_master:
+    image: redis
+    ports:
+      - "6379:6379"

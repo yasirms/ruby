@@ -1,0 +1,15 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: db
+  username: postgres
+  password: <%= ENV["DATABASE_PASS"]%>
+  pool: 5
+
+development:
+  <<: *default
+  database: weather_app
+
+test:
+  <<: *default
+  database: weather_test
