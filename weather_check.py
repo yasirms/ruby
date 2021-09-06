@@ -2,7 +2,7 @@
 import requests
 import json
 
-API_KEY = "2b97c0623d52e5ead6c7ec5a0944561e"
+API_KEY = ""
 
 print("Welcome to Weather Check")
 print("=======================")
